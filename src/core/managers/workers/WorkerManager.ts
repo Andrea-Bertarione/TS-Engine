@@ -4,6 +4,7 @@ import {ILogger} from "../../interfaces/ILogger";
 import {IMessageRegistry} from "../../interfaces/IMessageRegistry";
 import {AnyEngineMessage, MessageType} from "../../Types/MessageTypes";
 
+// Builder pattern + Event pattern
 export class WorkerManager {
     id: string;
     path: string;
@@ -20,7 +21,7 @@ export class WorkerManager {
         this.workingDirectory = workingDirectory;
     }
 
-    init() {
+    build(): WorkerManager {
         this.worker = new Worker(path.resolve(this.path), {
             workerData: {
                 id: this.id,
@@ -40,6 +41,13 @@ export class WorkerManager {
            else if (code === 0 && this.logger != null) this.logger.info(`Worker ${this.id} shutdown`);
            else console.log(`Worker ${this.id} stopped`);
         });
+
+        return this;
+    }
+
+    withLogger(logger: ILogger): WorkerManager {
+        this.logger = logger;
+        return this;
     }
 
     sendMessage<k extends MessageType>(type: k, payload: IMessageRegistry[k]) {
@@ -54,10 +62,6 @@ export class WorkerManager {
 
     removeListener<k extends MessageType>(type: k, callback: (payload: IMessageRegistry[k]) => void) {
         if (this.registeredListeners.has(type)) this.registeredListeners.get(type)!.delete(callback);
-    }
-
-    withLogger(logger: ILogger) {
-        this.logger = logger;
     }
 
     private handleMessage(message: AnyEngineMessage) {

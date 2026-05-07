@@ -24,10 +24,10 @@ export class Thread implements IThread {
     }
 
     public async start(): Promise<void> {
-        const start = Date.now();
         this.running = true;
 
         while (this.running) {
+            const start = Date.now();
             this.taskList.forEach(task => task());
 
             this.prepareTick();

@@ -12,11 +12,9 @@ const setup = () => {
     const WORKING_DIRECTORY = process.cwd();
 
     Object.values(THREAD_DATA).forEach(config => {
-        const worker = new WorkerManager(config.id, config.path, WORKING_DIRECTORY);
-        worker.withLogger(logger);
-        worker.init();
-
-        threadPool[config.id] = worker;
+        threadPool[config.id] = new WorkerManager(config.id, config.path, WORKING_DIRECTORY)
+            .withLogger(logger)
+            .build();
     });
 
     threadPool[THREAD_DATA.world.id]?.registerListener(WORLD_MESSAGES.WORLD_LOADED, (payload) => {

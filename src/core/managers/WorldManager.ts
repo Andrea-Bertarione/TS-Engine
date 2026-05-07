@@ -2,7 +2,7 @@ import {IWorld} from "../interfaces/IWorld";
 import { readFileSync, readdirSync, writeFileSync } from "fs";
 import {EventManager} from "./EventManager";
 import {onWorldStart} from "../classes/events/onWorldStart";
-import {IThread} from "../interfaces/IThread";
+import {mkdirSync} from "fs";
 
 const WORLD_FILE_EXTENSION = ".json";
 const WORLD_FOLDER = "worlds";
@@ -17,6 +17,8 @@ export class WorldManager {
 
     constructor(workingDirectory: string) {
         this.workingDirectory = workingDirectory;
+        mkdirSync(`${workingDirectory}/${WORLD_FOLDER}`, { recursive: true });
+
         this.worlds = this.listWorlds();
         this.selectedWorld = null;
     }
