@@ -1,9 +1,8 @@
 import {WorkerManager} from "./core/managers/workers/WorkerManager";
 import {DefaultLogger} from "./core/classes/DefaultLogger";
-import {WORLD_MESSAGES} from "./core/enums/WorldMessages";
 
-const THREAD_DATA = {
-    world: { id: "world", path: "./dist/core/managers/threads/worldThread.js" },
+export const THREAD_DATA = {
+    world: { id: "world", path: "./src/core/managers/threads/worldThread.js" },
 };
 
 const setup = () => {
@@ -17,9 +16,7 @@ const setup = () => {
             .build();
     });
 
-    threadPool[THREAD_DATA.world.id]?.registerListener(WORLD_MESSAGES.WORLD_LOADED, (payload) => {
-        logger.info("World loaded event received, world: " + payload.name);
-    })
+    return threadPool;
 }
 
-setup();
+export const threadPool = setup();

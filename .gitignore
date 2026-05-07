@@ -8,4 +8,9 @@ yarn-error.log*
 /.pnp
 .pnp.js
 
+*.js
+*.js.map
+
+worlds/*
+
 .vscode/*

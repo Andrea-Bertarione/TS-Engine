@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/D&amp;DEngine.iml" filepath="$PROJECT_DIR$/.idea/D&amp;DEngine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/DnDEngine.iml" filepath="$PROJECT_DIR$/.idea/DnDEngine.iml" />
     </modules>
   </component>
 </project>

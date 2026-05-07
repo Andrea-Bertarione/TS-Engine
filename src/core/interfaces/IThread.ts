@@ -4,7 +4,7 @@ export interface IThread {
     ticks: number;
     running: boolean;
 
-    start(): void;
+    start(): Promise<void>;
     schedule(callback: () => void): void;
     stop(): void;
 
