@@ -1,7 +1,7 @@
-import {THREAD_DATA, threadPool} from "../index";
+import {mainThreadHandler} from "../index";
 import {WORLD_MESSAGES} from "../core/enums/WorldMessages";
 
-const worldThread = threadPool[THREAD_DATA.world.id];
+const worldThread = mainThreadHandler.threadPool?.world;
 
 if (!worldThread) throw new Error("worldThread is undefined");
 

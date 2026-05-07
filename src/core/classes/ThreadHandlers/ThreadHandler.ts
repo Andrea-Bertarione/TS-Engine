@@ -1,17 +1,17 @@
 import {IThreadHandler} from "../../interfaces/IThreadHandler";
-import {EventManager} from "../../managers/EventManager";
+import {EventManager} from "../../managers/events/EventManager";
 import {ILogger} from "../../interfaces/ILogger";
 import {IThread} from "../../interfaces/IThread";
-import {WorkerGateway} from "../../managers/workers/WorkerGateway";
+import {IEventManager} from "../../interfaces/IEventManager";
+import {BaseEvent} from "../Event";
 
 export class ThreadHandler implements IThreadHandler {
-    eventManager?: EventManager;
+    eventManager?: IEventManager<BaseEvent>;
     logger?: ILogger;
     thread?: IThread;
-    workerGateway?: WorkerGateway;
 
-    withEventManager(eventManger: EventManager): this {
-        this.eventManager = eventManger;
+    withEventManager(eventManager : IEventManager<any>): this {
+        this.eventManager = eventManager ;
         return this
     }
 
@@ -25,26 +25,9 @@ export class ThreadHandler implements IThreadHandler {
         return this;
     }
 
-    withWorkerGateway(workerGateway: WorkerGateway): this {
-        this.workerGateway = workerGateway;
-
-        if (this.workerGateway.eventManager == null) {
-            this.workerGateway.withEventManager(this.eventManager!);
-        }
-
-        if (this.workerGateway.logger == null) {
-            this.workerGateway.withLogger(this.logger!);
-        }
-
-        this.workerGateway.build()
-
-        return this;
-    }
-
     build(): this {
         if (this.eventManager == null) throw new Error("EventManager not set!");
         if (this.thread == null) throw new Error("Thread not set!");
-        if (this.workerGateway == null) throw new Error("WorkerGateway not set!");
         if (this.logger == null) throw new Error("Logger not set!");
         if (this.thread.running) throw new Error("Thread is already running!");
 

@@ -1,14 +1,16 @@
 import {MessagePort} from "worker_threads";
-import {EventManager} from "../EventManager";
+import {EventManager} from "../events/EventManager";
 import {ILogger} from "../../interfaces/ILogger";
 import {AnyEngineCommand, CommandType, EventType} from "../../Types/MessageTypes";
 import {IWorkerCommands, IWorkerEvents} from "../../interfaces/IMessageRegistry";
+import {IEventManager} from "../../interfaces/IEventManager";
+import {BaseEvent} from "../../classes/Event";
 
 // Builter pattern + DependencyInjection
 export class WorkerGateway {
     messagePort: MessagePort;
 
-    eventManager: EventManager | null = null;
+    eventManager: IEventManager<BaseEvent> | null = null;
     logger: ILogger | null = null;
 
     private handlers: Map<CommandType, Set<(payload: any) => void>> = new Map();
@@ -18,7 +20,7 @@ export class WorkerGateway {
         this.messagePort = messagePort;
     }
 
-    withEventManager(eventManager: EventManager): WorkerGateway {
+    withEventManager(eventManager: IEventManager<BaseEvent>): WorkerGateway {
         this.eventManager = eventManager;
         return this;
     }

@@ -1,4 +1,4 @@
-import {BaseEvent} from "../Event";
+import {BaseEvent} from "../../Event";
 
 export class onWorldStart extends BaseEvent {
     worldName: string;

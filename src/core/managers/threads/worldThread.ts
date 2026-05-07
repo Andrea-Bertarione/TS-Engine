@@ -1,10 +1,10 @@
 import {Thread} from "../../classes/Thread";
-import {EventManager} from "../EventManager";
+import {EventManager} from "../events/EventManager";
 import {DefaultLogger} from "../../classes/DefaultLogger";
 import { workerData, parentPort } from "worker_threads";
 import {WorkerGateway} from "../workers/WorkerGateway";
 import {WorldThreadHandler} from "../../classes/ThreadHandlers/WorldThreadHandler";
-import {onWorldStart} from "../../classes/events/onWorldStart";
+import {onWorldStart} from "../../classes/events/localEvents/onWorldStart";
 import {WORLD_MESSAGES} from "../../enums/WorldMessages";
 
 const THREAD_ID = "world";

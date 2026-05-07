@@ -1,7 +1,8 @@
-import {BaseEvent} from "../classes/Event";
+import {BaseEvent} from "../../classes/Event";
+import {IEventManager} from "../../interfaces/IEventManager";
 
-type EventConstructor<T extends BaseEvent> = new (...args: any[]) => T;
-export class EventManager {
+export type EventConstructor<T extends BaseEvent> = new (...args: any[]) => T;
+export class EventManager implements IEventManager<BaseEvent> {
     private listeners: Map<EventConstructor<any>, Set<(event: any) => void>> = new Map();
 
     public subscribe<T extends BaseEvent>(

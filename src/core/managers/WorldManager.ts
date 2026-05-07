@@ -1,18 +1,20 @@
 import {IWorld} from "../interfaces/IWorld";
 import { readFileSync, readdirSync, writeFileSync } from "fs";
-import {EventManager} from "./EventManager";
-import {onWorldStart} from "../classes/events/onWorldStart";
+import {EventManager} from "./events/EventManager";
+import {onWorldStart} from "../classes/events/localEvents/onWorldStart";
 import {mkdirSync} from "fs";
+import {BaseEvent} from "../classes/Event";
+import {IEventManager} from "../interfaces/IEventManager";
 
 const WORLD_FILE_EXTENSION = ".json";
 const WORLD_FOLDER = "worlds";
 
 export class WorldManager {
     workingDirectory: string;
-    worlds: Set<String>;
+    worlds: Set<string>;
     selectedWorld: IWorld | null;
 
-    eventManager: EventManager | null = null;
+    eventManager: IEventManager<BaseEvent> | null = null;
     currentThread: string | null = null;
 
     constructor(workingDirectory: string) {
@@ -63,7 +65,7 @@ export class WorldManager {
         return worldData;
     }
 
-    private listWorlds(): Set<String> {
+    private listWorlds(): Set<string> {
         return new Set(readdirSync(`${this.workingDirectory}/${WORLD_FOLDER}`).map(file => file.replace(WORLD_FILE_EXTENSION, '')));
     }
 }
