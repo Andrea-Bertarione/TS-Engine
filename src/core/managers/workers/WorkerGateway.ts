@@ -1,9 +1,8 @@
 import {MessagePort} from "worker_threads";
 import {EventManager} from "../EventManager";
 import {ILogger} from "../../interfaces/ILogger";
-import {GatewayHandler} from "../../Types/GatewayTypes";
-import {AnyEngineMessage, CommandType, EventType, MessageType} from "../../Types/MessageTypes";
-import {IMessageRegistry, IWorkerCommands, IWorkerEvents} from "../../interfaces/IMessageRegistry";
+import {AnyEngineCommand, CommandType, EventType} from "../../Types/MessageTypes";
+import {IWorkerCommands, IWorkerEvents} from "../../interfaces/IMessageRegistry";
 
 // Builter pattern + DependencyInjection
 export class WorkerGateway {
@@ -12,7 +11,7 @@ export class WorkerGateway {
     eventManager: EventManager | null = null;
     logger: ILogger | null = null;
 
-    private handlers: Map<AnyEngineMessage["type"], Set<GatewayHandler>> = new Map();
+    private handlers: Map<CommandType, Set<(payload: any) => void>> = new Map();
     private onShutdownHandlers: (() => void)[] | null = null;
 
     constructor(messagePort: MessagePort) {
@@ -38,7 +37,7 @@ export class WorkerGateway {
     build(): WorkerGateway {
         if (this.eventManager == null) throw new Error("EventManager not set!");
 
-        this.messagePort.on("message", (msg: AnyEngineMessage) => {
+        this.messagePort.on("message", (msg: AnyEngineCommand) => {
             const handlerSet = this.handlers.get(msg.type);
             if (handlerSet) {
                 handlerSet.forEach(h => h(msg.payload));

@@ -15,4 +15,3 @@ export interface IWorkerEvents {
 }
 
 // Combined (for shared types like AnyEngineMessage)
-export interface IMessageRegistry extends IWorkerCommands, IWorkerEvents {}

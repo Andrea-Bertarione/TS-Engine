@@ -1,8 +1,8 @@
 import { Worker } from "worker_threads";
 import path from "path";
 import {ILogger} from "../../interfaces/ILogger";
-import {IMessageRegistry, IWorkerCommands, IWorkerEvents} from "../../interfaces/IMessageRegistry";
-import {AnyEngineMessage, CommandType, EventType, MessageType} from "../../Types/MessageTypes";
+import {IWorkerCommands, IWorkerEvents} from "../../interfaces/IMessageRegistry";
+import {AnyEngineEvent, CommandType, EventType} from "../../Types/MessageTypes";
 
 // Builder pattern + Event pattern
 export class WorkerManager {
@@ -13,7 +13,7 @@ export class WorkerManager {
     private worker: Worker | null = null;
     private logger: ILogger | null = null;
 
-    private registeredListeners: Map<MessageType, Set<(payload: any) => void>> = new Map();
+    private registeredListeners: Map<EventType, Set<(payload: any) => void>> = new Map();
 
     constructor(id: string, filePath: string, workingDirectory: string) {
         this.id = id;
@@ -29,7 +29,7 @@ export class WorkerManager {
             }
         });
 
-        this.worker.on("message", (msg: AnyEngineMessage) => this.handleMessage(msg));
+        this.worker.on("message", (msg: AnyEngineEvent) => this.handleMessage(msg));
 
         this.worker.on("error", (error) => {
             if (this.logger != null) this.logger.withException("Worker Error", error);
@@ -64,7 +64,7 @@ export class WorkerManager {
         if (this.registeredListeners.has(type)) this.registeredListeners.get(type)!.delete(callback);
     }
 
-    private handleMessage(message: AnyEngineMessage) {
+    private handleMessage(message: AnyEngineEvent) {
         const eventSet = this.registeredListeners.get(message.type);
         if (eventSet != null) eventSet.forEach(event => event(message.payload));
     }
