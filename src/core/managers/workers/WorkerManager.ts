@@ -1,8 +1,8 @@
 import { Worker } from "worker_threads";
 import path from "path";
 import {ILogger} from "../../interfaces/ILogger";
-import {IMessageRegistry} from "../../interfaces/IMessageRegistry";
-import {AnyEngineMessage, MessageType} from "../../Types/MessageTypes";
+import {IMessageRegistry, IWorkerCommands, IWorkerEvents} from "../../interfaces/IMessageRegistry";
+import {AnyEngineMessage, CommandType, EventType, MessageType} from "../../Types/MessageTypes";
 
 // Builder pattern + Event pattern
 export class WorkerManager {
@@ -50,17 +50,17 @@ export class WorkerManager {
         return this;
     }
 
-    sendMessage<k extends MessageType>(type: k, payload: IMessageRegistry[k]) {
+    sendMessage<k extends CommandType>(type: k, payload: IWorkerCommands[k]) {
         this.worker?.postMessage({ type, payload });
     }
 
-    registerListener<k extends MessageType>(type: k, callback: (payload: IMessageRegistry[k]) => void) {
+    registerListener<k extends EventType>(type: k, callback: (payload: IWorkerEvents[k]) => void) {
         if (!this.registeredListeners.has(type)) this.registeredListeners.set(type, new Set());
 
         this.registeredListeners.get(type)!.add(callback);
     }
 
-    removeListener<k extends MessageType>(type: k, callback: (payload: IMessageRegistry[k]) => void) {
+    removeListener<k extends EventType>(type: k, callback: (payload: IWorkerEvents[k]) => void) {
         if (this.registeredListeners.has(type)) this.registeredListeners.get(type)!.delete(callback);
     }
 

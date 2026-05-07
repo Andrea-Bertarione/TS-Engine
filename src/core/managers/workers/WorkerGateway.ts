@@ -2,8 +2,8 @@ import {MessagePort} from "worker_threads";
 import {EventManager} from "../EventManager";
 import {ILogger} from "../../interfaces/ILogger";
 import {GatewayHandler} from "../../Types/GatewayTypes";
-import {AnyEngineMessage, MessageType} from "../../Types/MessageTypes";
-import {IMessageRegistry} from "../../interfaces/IMessageRegistry";
+import {AnyEngineMessage, CommandType, EventType, MessageType} from "../../Types/MessageTypes";
+import {IMessageRegistry, IWorkerCommands, IWorkerEvents} from "../../interfaces/IMessageRegistry";
 
 // Builter pattern + DependencyInjection
 export class WorkerGateway {
@@ -52,13 +52,13 @@ export class WorkerGateway {
         return this;
     }
 
-    on<k extends MessageType>(type: k, handler: (payload: IMessageRegistry[k]) => void): this {
+    on<k extends CommandType>(type: k, handler: (payload: IWorkerCommands[k]) => void): this {
         if (!this.handlers.has(type)) this.handlers.set(type, new Set());
         this.handlers.get(type)!.add(handler as (payload: any) => void);
         return this;
     }
 
-    send<k extends MessageType>(type: k, payload: IMessageRegistry[k]): void {
+    send<k extends EventType>(type: k, payload: IWorkerEvents[k]): void {
         this.messagePort.postMessage({ type, payload });
     }
 

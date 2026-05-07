@@ -35,31 +35,23 @@ const onStart = () => {
 }
 
 const bindWorldEvents = (worldThread: WorldThreadHandler) => {
-    if (worldThread.eventManager == null) throw new Error("EventManager not set!");
-
     // onWorldStart
-    worldThread.eventManager.subscribe(onWorldStart, (payload) => {
-        if (worldThread.workerGateway == null) throw new Error("WorkerGateway not set!");
-        if (worldThread.logger == null) throw new Error("Logger not set!");
+    worldThread.eventManager!.subscribe(onWorldStart, (payload) => {
+        worldThread.logger!.info("Loading world: " + payload.worldName);
 
-        worldThread.logger.info("Loading world: " + payload.worldName);
-
-        worldThread.workerGateway.send(WORLD_MESSAGES.WORLD_LOADED, { name: payload.worldName });
+        worldThread.workerGateway!.send(WORLD_MESSAGES.WORLD_LOADED, { name: payload.worldName });
     });
 }
 
 const bindMessageEvents = (worldThread: WorldThreadHandler) => {
-    if (worldThread.workerGateway == null) throw new Error("WorkerGateway not set!");
-    if (worldThread.worldManager == null) throw new Error("WorldManager not set!");
-
     //Load event
-    worldThread.workerGateway.on(WORLD_MESSAGES.WORLD_LOAD, (payload) => {
+    worldThread.workerGateway!.on(WORLD_MESSAGES.WORLD_LOAD, (payload) => {
        worldThread.worldManager?.loadWorld(payload.name);
     });
 
     //Create event
-    worldThread.workerGateway.on(WORLD_MESSAGES.WORLD_CREATE, (payload) => {
-        worldThread.worldManager?.createWorld(payload.name);
+    worldThread.workerGateway!.on(WORLD_MESSAGES.WORLD_CREATE, (payload) => {
+        worldThread.worldManager!.createWorld(payload.name);
     });
 }
 
