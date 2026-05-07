@@ -1,5 +1,4 @@
 import {IThread} from "./IThread";
-import {EventManager} from "../managers/events/EventManager";
 import {ILogger} from "./ILogger";
 import {WorkerGateway} from "../managers/workers/WorkerGateway";
 import {WorldManager} from "../managers/WorldManager";
@@ -7,7 +6,7 @@ import {WorkerManager} from "../managers/workers/WorkerManager";
 import {IEventManager, IGenericEventManager} from "./IEventManager";
 import {ThreadEvent} from "../classes/events/ThreadEvent";
 import {CommandType} from "../Types/MessageTypes";
-import {THREAD_DATA} from "../../index";
+import {THREAD_DATA} from "../../Configs/ThreadData";
 import {BaseEvent} from "../classes/Event";
 
 //thread + eventManager + logger

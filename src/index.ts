@@ -1,16 +1,12 @@
 import {DefaultLogger} from "./core/classes/DefaultLogger";
-import {ThreadPool} from "./core/Types/ThreadPool";
 import {MainThreadHandler} from "./core/classes/ThreadHandlers/MainThreadHandler";
 import {Thread} from "./core/classes/Thread";
 import {IMainThreadHandler} from "./core/interfaces/IThreadHandler";
+import {THREAD_DATA} from "./Configs/ThreadData";
 
 const threadID = "main";
 const threadName = "Main";
 const ticksPerSecond = 60;
-
-export const THREAD_DATA: ThreadPool = {
-    world: { id: "world", path: "./src/core/managers/threads/worldThread.js" },
-};
 
 const setup = () => {
     const WORKING_DIRECTORY = process.cwd();

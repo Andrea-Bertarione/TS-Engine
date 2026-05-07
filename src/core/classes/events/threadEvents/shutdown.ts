@@ -1,5 +1,5 @@
 import {ThreadEvent} from "../ThreadEvent";
-import {THREAD_DATA} from "../../../../index";
+import {THREAD_DATA} from "../../../../Configs/ThreadData";
 import {THREAD_MESSAGES} from "../../../enums/ThreadMessages";
 
 export class ShutdownEvent extends ThreadEvent<THREAD_MESSAGES.STOP_THREAD> {
