@@ -1,5 +1,7 @@
 import {mainThreadHandler} from "../index";
 import {WORLD_MESSAGES} from "../core/enums/WorldMessages";
+import {onWorldStart} from "../core/classes/events/localEvents/onWorldStart";
+import {ShutdownEvent} from "../core/classes/events/threadEvents/shutdown";
 
 const worldThread = mainThreadHandler.threadPool?.world;
 

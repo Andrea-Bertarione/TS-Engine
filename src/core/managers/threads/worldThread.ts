@@ -36,7 +36,7 @@ const onStart = () => {
 
 const bindWorldEvents = (worldThread: WorldThreadHandler) => {
     // onWorldStart
-    worldThread.eventManager!.subscribe(onWorldStart, (payload) => {
+    worldThread.getEventManager()!.subscribe(onWorldStart, (payload) => {
         worldThread.logger!.info("Loading world: " + payload.worldName);
 
         worldThread.workerGateway!.send(WORLD_MESSAGES.WORLD_LOADED, { name: payload.worldName });

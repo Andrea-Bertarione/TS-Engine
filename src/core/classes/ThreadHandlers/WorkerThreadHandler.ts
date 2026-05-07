@@ -28,6 +28,10 @@ export class WorkerThreadHandler extends ThreadHandler implements IWorkerThreadH
         return this
     }
 
+    getEventManager(): IEventManager<BaseEvent> {
+        return this.eventManager! as IEventManager<BaseEvent>;
+    }
+
     build(): this {
         if (this.workerGateway == null) throw new Error("WorkerGateway not set!");
 

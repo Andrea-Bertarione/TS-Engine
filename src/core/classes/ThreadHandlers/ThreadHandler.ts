@@ -2,15 +2,15 @@ import {IThreadHandler} from "../../interfaces/IThreadHandler";
 import {EventManager} from "../../managers/events/EventManager";
 import {ILogger} from "../../interfaces/ILogger";
 import {IThread} from "../../interfaces/IThread";
-import {IEventManager} from "../../interfaces/IEventManager";
+import {IEventManager, IGenericEventManager} from "../../interfaces/IEventManager";
 import {BaseEvent} from "../Event";
 
 export class ThreadHandler implements IThreadHandler {
-    eventManager?: IEventManager<BaseEvent>;
+    protected eventManager?: IGenericEventManager;
     logger?: ILogger;
     thread?: IThread;
 
-    withEventManager(eventManager : IEventManager<any>): this {
+    withEventManager(eventManager : IGenericEventManager): this {
         this.eventManager = eventManager ;
         return this
     }
