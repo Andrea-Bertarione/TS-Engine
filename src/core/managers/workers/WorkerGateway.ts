@@ -1,10 +1,10 @@
 import {MessagePort} from "worker_threads";
-import {EventManager} from "../events/EventManager";
 import {ILogger} from "../../interfaces/ILogger";
 import {AnyEngineCommand, CommandType, EventType} from "../../Types/MessageTypes";
 import {IWorkerCommands, IWorkerEvents} from "../../interfaces/IMessageRegistry";
 import {IEventManager} from "../../interfaces/IEventManager";
 import {BaseEvent} from "../../classes/Event";
+import {THREAD_MESSAGES} from "../../enums/ThreadMessages";
 
 // Builter pattern + DependencyInjection
 export class WorkerGateway {
@@ -50,6 +50,8 @@ export class WorkerGateway {
             if (this.onShutdownHandlers != null) this.onShutdownHandlers.forEach(h => h());
         });
 
+        this.setupAutomaticMessageBinding();
+
         return this;
     }
 
@@ -63,4 +65,19 @@ export class WorkerGateway {
         this.messagePort.postMessage({ type, payload });
     }
 
+    private handleShutdown() {
+        if (this.onShutdownHandlers != null) {
+            this.onShutdownHandlers.forEach(h => h());
+        }
+
+        process.exit(0);
+    }
+
+    private setupAutomaticMessageBinding() {
+        this.on(THREAD_MESSAGES.STOP_THREAD, (payload) => {
+           this.logger?.info("Received stop thread message, shutting down...");
+
+           this.handleShutdown();
+        });
+    }
 }

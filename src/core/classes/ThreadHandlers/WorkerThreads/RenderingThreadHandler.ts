@@ -3,6 +3,8 @@ import {WorldManager} from "../../../managers/WorldManager";
 import {WorkerThreadHandler} from "../WorkerThreadHandler";
 import {EventManager} from "../../../managers/events/EventManager";
 import {RenderingManager} from "../../../managers/rendering/RenderingManager";
+import {IThread} from "../../../interfaces/IThread";
+import {WorkerGateway} from "../../../managers/workers/WorkerGateway";
 
 //This thread handler requires a certain order to build, will make a specific builder sooner or later
 export class RenderingThreadHandler extends WorkerThreadHandler implements IRenderingThreadHandler {
@@ -12,10 +14,13 @@ export class RenderingThreadHandler extends WorkerThreadHandler implements IRend
     title: string = "Rendering Windows";
     vsync: boolean = false;
 
-    onPageClose?: () => void;
-
-    withRenderingManager(): this {
-        this.renderingManager = new RenderingManager(this.title, this.width, this.height, this.vsync);
+    withRenderingManager(shutdownCallback: (thread: IThread, workerGateway: WorkerGateway) => void): this {
+        this.renderingManager =
+            new RenderingManager(this.title, this.width, this.height, this.vsync)
+                .withLogger(this.logger!)
+                .withShutdown(() => {
+                    shutdownCallback(this.thread!, this.workerGateway!);
+                });
         return this;
     }
 
@@ -47,10 +52,6 @@ export class RenderingThreadHandler extends WorkerThreadHandler implements IRend
 
         this.renderingManager.loop((delta) => {
             this.thread!.runSingleTick(delta);
-        }, () => {
-            if (this.onPageClose != null) this.onPageClose();
-
-            this.thread!.stop();
         });
 
         return super.build();

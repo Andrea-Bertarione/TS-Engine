@@ -9,6 +9,7 @@ import {CommandType} from "../Types/MessageTypes";
 import {THREAD_DATA} from "../../Configs/ThreadData";
 import {BaseEvent} from "../classes/Event";
 import {RenderingManager} from "../managers/rendering/RenderingManager";
+import {CLIManager} from "../managers/logic/CLIManager";
 
 //thread + eventManager + logger
 export interface IThreadHandler {
@@ -24,11 +25,15 @@ export interface IThreadHandler {
 
 export interface IMainThreadHandler extends IThreadHandler {
     threadPool?: Record<string, WorkerManager>;
+    cliManager?: CLIManager;
 
     withThreadPool: (configs: typeof THREAD_DATA, workingDirectory: string) => this;
     withEventManager: (eventManager : IEventManager<ThreadEvent<CommandType>>) => this;
+    withCLIManager: (cliManager: CLIManager) => this;
 
     getEventManager: () => IEventManager<ThreadEvent<CommandType>>;
+    getThread(threadName: string): WorkerManager | undefined;
+    getThreadPool(): Record<string, WorkerManager>;
 }
 
 export interface IWorkerThreadHandler extends IThreadHandler {
@@ -56,7 +61,7 @@ export interface IRenderingThreadHandler extends IWorkerThreadHandler {
     vsync?: boolean;
     title?: string;
 
-    withRenderingManager: (renderingManager: RenderingManager) => this;
+    withRenderingManager: (shutdownCallback: () => void) => this;
     withWidth: (width: number) => this;
     withHeight: (height: number) => this;
     withVsync: (vsync: boolean) => this;

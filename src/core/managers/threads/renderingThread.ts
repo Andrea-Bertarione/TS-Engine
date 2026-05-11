@@ -4,6 +4,8 @@ import {DefaultLogger} from "../../classes/DefaultLogger";
 import {parentPort, workerData} from "worker_threads";
 import {WorkerGateway} from "../workers/WorkerGateway";
 import {RenderingThreadHandler} from "../../classes/ThreadHandlers/WorkerThreads/RenderingThreadHandler";
+import {IThread} from "../../interfaces/IThread";
+import {THREAD_MESSAGES} from "../../enums/ThreadMessages";
 
 const THREAD_ID = "rendering";
 const THREAD_NAME = "rending";
@@ -22,7 +24,13 @@ const onStart = () => {
             new WorkerGateway(parentPort)
                 .withLogger(new DefaultLogger("[rendering-Gateway]"))
         )
-        .withRenderingManager()
+        .withRenderingManager((thread: IThread, workerGateway: WorkerGateway) => {
+            thread.stop();
+
+            workerGateway.send(THREAD_MESSAGES.THREAD_STOPPED, {
+                reason: "Rendering thread stopped gracefully."
+            });
+        })
         .build();
 }
 

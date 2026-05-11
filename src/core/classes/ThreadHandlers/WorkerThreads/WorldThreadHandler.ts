@@ -10,6 +10,7 @@ export class WorldThreadHandler extends WorkerThreadHandler implements IWorldThr
     withWorkingDirectory(workingDirectory: string): this {
         this.workingDirectory = workingDirectory;
         this.worldManager = new WorldManager(this.workingDirectory);
+        this.worldManager.withLogger(this.logger!);
 
         return this;
     }

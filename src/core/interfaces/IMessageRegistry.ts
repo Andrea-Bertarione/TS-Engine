@@ -12,4 +12,5 @@ export interface IWorkerCommands {
 // Worker → Main (events)
 export interface IWorkerEvents {
     [WORLD_MESSAGES.WORLD_LOADED]: { name: string };
+    [THREAD_MESSAGES.THREAD_STOPPED]: { reason: string };
 }

@@ -7,9 +7,11 @@ import {IEventManager} from "../../interfaces/IEventManager";
 import {ThreadEvent} from "../events/ThreadEvent";
 import {CommandType} from "../../Types/MessageTypes";
 import {ThreadPool} from "../../Types/ThreadPool";
+import {CLIManager} from "../../managers/logic/CLIManager";
 
 export class MainThreadHandler extends ThreadHandler implements IMainThreadHandler{
     threadPool?: Record<string, WorkerManager>
+    cliManager? : CLIManager;
 
     withThreadPool(configs: ThreadPool, workingDirectory: string): this {
         this.threadPool = {};
@@ -26,12 +28,27 @@ export class MainThreadHandler extends ThreadHandler implements IMainThreadHandl
         return super.withEventManager(new MainEventManager(this.threadPool));
     }
 
+    withCLIManager(): this {
+        this.cliManager = new CLIManager();
+        return this;
+    }
+
     getEventManager(): IEventManager<ThreadEvent<CommandType>> {
         return this.eventManager as IEventManager<ThreadEvent<CommandType>>;
     }
 
+    getThread(threadId: string): WorkerManager | undefined {
+        return this.threadPool?.[threadId];
+    }
+
+    getThreadPool(): Record<string, WorkerManager> {
+        return this.threadPool!;
+    }
+
     build(): this {
         if (this.threadPool == null) throw new Error("ThreadPool not set!");
+
+        this.cliManager!.startCLI(this.thread!);
 
         return super.build();
     }

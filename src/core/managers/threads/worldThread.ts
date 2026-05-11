@@ -30,6 +30,7 @@ const onStart = () => {
 
     bindWorldEvents(worldThread);
     bindMessageEvents(worldThread);
+    bindShutdownEvents(worldThread);
 
     return worldThread;
 }
@@ -52,6 +53,15 @@ const bindMessageEvents = (worldThread: WorldThreadHandler) => {
     //Create event
     worldThread.workerGateway!.on(WORLD_MESSAGES.WORLD_CREATE, (payload) => {
         worldThread.worldManager!.createWorld(payload.name);
+    });
+}
+
+const bindShutdownEvents = (worldThread: WorldThreadHandler) => {
+    worldThread.workerGateway!.onShutdown(() => {
+        if (worldThread.worldManager!.selectedWorld) {
+            worldThread.logger!.info("Received shutdown signal, saving world");
+            worldThread.worldManager!.saveWorld(worldThread.worldManager!.selectedWorld);
+        }
     });
 }
 

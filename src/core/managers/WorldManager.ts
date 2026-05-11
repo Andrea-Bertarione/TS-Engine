@@ -5,6 +5,7 @@ import {onWorldStart} from "../classes/events/localEvents/onWorldStart";
 import {mkdirSync} from "fs";
 import {BaseEvent} from "../classes/Event";
 import {IEventManager} from "../interfaces/IEventManager";
+import {ILogger} from "../interfaces/ILogger";
 
 const WORLD_FILE_EXTENSION = ".json";
 const WORLD_FOLDER = "worlds";
@@ -15,6 +16,7 @@ export class WorldManager {
     selectedWorld: IWorld | null;
 
     eventManager: IEventManager<BaseEvent> | null = null;
+    logger: ILogger | null = null;
     currentThread: string | null = null;
 
     constructor(workingDirectory: string) {
@@ -48,12 +50,31 @@ export class WorldManager {
     }
 
     saveWorld(worldData: IWorld): void {
-        writeFileSync(`${this.workingDirectory}/${WORLD_FOLDER}/${worldData.name}${WORLD_FILE_EXTENSION}`, JSON.stringify(worldData, null, 4));
+        try {
+            writeFileSync(`${this.workingDirectory}/${WORLD_FOLDER}/${worldData.name}${WORLD_FILE_EXTENSION}`, JSON.stringify(worldData, null, 4));
+        }
+         catch (e: unknown) {
+            if (e instanceof Error) {
+                this.logger?.withException("World save error", e);
+            } else {
+                this.logger?.withException("World save error", new Error(String(e)));
+            }
+        }
+
+        this.logger?.info(`World ${worldData.name} saved!`);
     }
 
-    withWorldEvents(eventManager: EventManager, currentThread: string) {
+    withWorldEvents(eventManager: EventManager, currentThread: string) : this {
         this.eventManager = eventManager;
         this.currentThread = currentThread;
+
+        return this;
+    }
+
+    withLogger(logger: ILogger): this {
+        this.logger = logger;
+
+        return this;
     }
 
     private readWorldData(worldName: string): IWorld {
