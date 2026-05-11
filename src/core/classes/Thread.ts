@@ -93,9 +93,15 @@ export class Thread implements IThread {
     }
 
     private prepareTick(): void {
-        const currentTickSchedule: (() => void)[] = Object.values(this.scheduledTasksEveryFrame).map(task => task.every % this.currentTick === 0 && task.callback());
+        const currentTickTasks: (() => void)[] = [];
 
-        this.taskList = new Set([...this.scheduledTasks, ...currentTickSchedule]);
+        for (const { every, callback } of this.scheduledTasksEveryFrame.values()) {
+            if (this.currentTick % every === 0) {
+                currentTickTasks.push(callback);
+            }
+        }
+
+        this.taskList = new Set([...this.scheduledTasks, ...currentTickTasks]);
         this.scheduledTasks.clear();
     }
 }
