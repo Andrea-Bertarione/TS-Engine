@@ -8,5 +8,8 @@ export interface IThread {
     schedule(callback: () => void): void;
     stop(): void;
 
+    startExternal(): void
+    runSingleTick(delta: number): void
+
     getDelta(): number;
 }

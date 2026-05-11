@@ -8,6 +8,7 @@ import {ThreadEvent} from "../classes/events/ThreadEvent";
 import {CommandType} from "../Types/MessageTypes";
 import {THREAD_DATA} from "../../Configs/ThreadData";
 import {BaseEvent} from "../classes/Event";
+import {RenderingManager} from "../managers/rendering/RenderingManager";
 
 //thread + eventManager + logger
 export interface IThreadHandler {
@@ -45,4 +46,19 @@ export interface IWorldThreadHandler extends IWorkerThreadHandler {
 
     withWorkingDirectory: (workingDirectory: string) => this;
     withWorldEvents: () => this;
+}
+
+export interface IRenderingThreadHandler extends IWorkerThreadHandler {
+    renderingManager? : RenderingManager;
+
+    width?: number;
+    height?: number;
+    vsync?: boolean;
+    title?: string;
+
+    withRenderingManager: (renderingManager: RenderingManager) => this;
+    withWidth: (width: number) => this;
+    withHeight: (height: number) => this;
+    withVsync: (vsync: boolean) => this;
+    withTitle: (title: string) => this;
 }

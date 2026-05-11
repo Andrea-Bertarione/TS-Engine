@@ -24,6 +24,7 @@ export class Thread implements IThread {
     }
 
     public async start(): Promise<void> {
+        if (this.running) return;
         this.running = true;
 
         while (this.running) {
@@ -33,6 +34,18 @@ export class Thread implements IThread {
             this.prepareTick();
             this.delta = await this.waitNextTick(start);
         }
+    }
+
+    public startExternal(): void {
+        this.running = true;
+    }
+
+    public runSingleTick(delta: number): void {
+        if (!this.running) return;
+
+        this.delta = delta;
+        this.taskList.forEach(task => task());
+        this.prepareTick();
     }
 
     public schedule(callback: () => void): void {

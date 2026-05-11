@@ -1,7 +1,7 @@
-import {IWorldThreadHandler} from "../../interfaces/IThreadHandler";
-import {WorldManager} from "../../managers/WorldManager";
-import {WorkerThreadHandler} from "./WorkerThreadHandler";
-import {EventManager} from "../../managers/events/EventManager";
+import {IWorldThreadHandler} from "../../../interfaces/IThreadHandler";
+import {WorldManager} from "../../../managers/WorldManager";
+import {WorkerThreadHandler} from "../WorkerThreadHandler";
+import {EventManager} from "../../../managers/events/EventManager";
 
 export class WorldThreadHandler extends WorkerThreadHandler implements IWorldThreadHandler{
     worldManager?: WorldManager;

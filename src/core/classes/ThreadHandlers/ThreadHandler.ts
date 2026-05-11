@@ -29,7 +29,6 @@ export class ThreadHandler implements IThreadHandler {
         if (this.eventManager == null) throw new Error("EventManager not set!");
         if (this.thread == null) throw new Error("Thread not set!");
         if (this.logger == null) throw new Error("Logger not set!");
-        if (this.thread.running) throw new Error("Thread is already running!");
 
         this.thread.start().catch(e => this.logger!.withException("Thread Error", e));
 
